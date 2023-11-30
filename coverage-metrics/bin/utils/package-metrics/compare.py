@@ -12,6 +12,7 @@ COLOURS = {
 }
 
 
+# Validates and normalises the CLI arguments.
 def normalise(args):
     if not args.base_path or len(args.base_path) == 0:
         raise "the --base parameter must not be empty"
@@ -58,6 +59,7 @@ if "__main__" == __name__:
 
     table = PrettyTable(("Package", "Efferent", "Afferent", "External"))
 
+    status = os.EX_OK
     for pkg, pkg_metrics in target.items():
         is_new = pkg not in base
 
@@ -68,6 +70,9 @@ if "__main__" == __name__:
         efferent_label = " %+d" % delta_efferent if delta_efferent != 0 else ""
         afferent_label = " %+d" % delta_afferent if delta_afferent != 0 else ""
         external_label = " %+d" % delta_external if delta_external != 0 else ""
+
+        if not is_new and any(delta > 0 for delta in [delta_efferent, delta_afferent, delta_external]):
+            status = os.EX_DATAERR
 
         table.add_row(
             (pkg,
@@ -81,3 +86,5 @@ if "__main__" == __name__:
     table.align["Afferent"] = "r"
     table.align["External"] = "r"
     print(table)
+
+    exit(status)
