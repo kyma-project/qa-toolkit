@@ -79,7 +79,23 @@ def highlight(text, colour):
     return f'{colour}{text}{COLOURS["empty"]}'
 
 
+# Inserts empty lines between scenarios.
+def separate_scenarios(report):
+    lines = report.split("\n")
+    for i, line in enumerate(lines):
+        if not line.strip().startswith("When"):
+            continue
+
+        if i != 0 and lines[i-1].strip().startswith("Given"):
+            continue
+
+        lines[i] = "\n"+line
+
+    return "\n".join(lines)
+
+
 report = sys.stdin.read()
+report = separate_scenarios(report)
 if len(sys.argv) == 2:
     TERMS_URL = sys.argv[1]
 highlighted_report = highlight_keywords(report, KeywordsReader(TERMS_URL).read())
