@@ -3,6 +3,7 @@
 from argparse import ArgumentParser
 import json
 from prettytable import PrettyTable
+import os
 
 COLOURS = {
     "red": "\033[91m",
