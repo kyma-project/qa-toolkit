@@ -3,6 +3,7 @@
 from argparse import ArgumentParser
 import json
 from prettytable import PrettyTable
+import os
 
 COLOURS = {
     "red": "\033[91m",
@@ -59,6 +60,7 @@ if "__main__" == __name__:
 
     table = PrettyTable(("Package", "Efferent", "Afferent", "External"))
 
+    status = os.EX_OK
     for pkg, pkg_metrics in target.items():
         is_new = pkg not in base
 
@@ -71,8 +73,7 @@ if "__main__" == __name__:
         external_label = " %+d" % delta_external if delta_external != 0 else ""
 
         if not is_new and any(delta > 0 for delta in [delta_efferent, delta_afferent, delta_external]):
-            # Notify that the metrics increased for some packages.
-            pass
+            status = os.EX_DATAERR
 
         table.add_row(
             (pkg,
@@ -86,4 +87,5 @@ if "__main__" == __name__:
     table.align["Afferent"] = "r"
     table.align["External"] = "r"
     print(table)
-    exit(0)
+
+    exit(status)
