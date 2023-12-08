@@ -35,8 +35,6 @@ class File:
 
     @staticmethod
     def is_unit_test(name, e2e_path):
-        if e2e_path == "":
-            return True
         return File.is_test(name) and (e2e_path == "" or not name.startswith(e2e_path))
 
 
