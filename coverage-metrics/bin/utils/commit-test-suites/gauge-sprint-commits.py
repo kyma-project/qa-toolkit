@@ -39,15 +39,6 @@ class File:
         return File.is_test(name) and test_path is not None and name.startswith(test_path)
 
 
-class Commit:
-    def __init__(self, message, files):
-        self.message = message
-        self.files = files
-
-    def filter_files(self, predicate):
-        return predicate(self.files)
-
-
 PATH_REPO = tempfile.mkdtemp()
 BRANCH_MAIN = "main"
 
