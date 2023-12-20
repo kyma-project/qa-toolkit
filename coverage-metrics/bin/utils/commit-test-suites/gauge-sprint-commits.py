@@ -113,6 +113,8 @@ def normalise(args):
 
     if args.exclude_path:
         args.exclude_path = tuple(args.exclude_path)
+    else:
+        args.exclude_path = ()
 
     return args
 
