@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import re
 import sys
 from urllib.request import urlopen
 
@@ -21,49 +22,22 @@ COLOURS = {
 
 # The URL to the Markdown file with a list of keywords.
 TERMS_URL = ""
+TABLE_HEADER = "Term"
 
 
-# KeywordsReader reads the list of keywords from the remote Wiki page.
-class KeywordsReader:
-    def __init__(self, file_url):
-        with urlopen(file_url) as response:
-            body = str(response.read().decode('utf-8'))
-            self._lines = body.split('\n')
+def read_keywords(url):
+    with urlopen(url) as response:
+        terms_response = str(response.read().decode('utf-8'))
 
-        self._terms_index = 0
-        self._terms_table_index = 0
+    terms = []
+    for match in re.compile(r'\|(.*?)\|.*?\|').finditer(terms_response):
+        columns = match.group(1).split('|')
+        term = columns[0].strip()
+        is_table_header = len(term.replace("-", "")) == 0 or term == TABLE_HEADER
+        if not is_table_header:
+            terms.append(term)
 
-    # Returns the list of terms from the parsed Wiki page.
-    def read(self):
-        self._find_terms_section()
-        self._find_table()
-        return self._read_table_terms()
-
-    # Skips all the lines in the source until the ## Terms section.
-    def _find_terms_section(self):
-        for i, l in enumerate(self._lines):
-            if l.startswith("## Terms"):
-                self._terms_index = i
-                break
-
-    # Skips all the lines until the table node is found.
-    def _find_table(self):
-        for i in range(self._terms_index + 1, len(self._lines)):
-            if self._lines[i].startswith("| Term "):
-                self._terms_table_index = i
-                break
-
-    # Returns the terms from the first column of the table.
-    def _read_table_terms(self):
-        keys = []
-        for i in range(self._terms_table_index + 2, len(self._lines)):
-            table_line = self._lines[i]
-            if not table_line.startswith("| "):
-                break
-
-            keys.append(table_line[1:table_line.find("|", 1)].strip())
-
-        return keys
+    return terms
 
 
 # Highlights the keywords in the input.
@@ -86,10 +60,10 @@ def separate_scenarios(report):
         if not line.strip().startswith("When"):
             continue
 
-        if i != 0 and lines[i-1].strip().startswith("Given"):
+        if i != 0 and lines[i - 1].strip().startswith("Given"):
             continue
 
-        lines[i] = "\n"+line
+        lines[i] = "\n" + line
 
     return "\n".join(lines)
 
@@ -98,5 +72,5 @@ report = sys.stdin.read()
 report = separate_scenarios(report)
 if len(sys.argv) == 2:
     TERMS_URL = sys.argv[1]
-highlighted_report = highlight_keywords(report, KeywordsReader(TERMS_URL).read())
+highlighted_report = highlight_keywords(report, read_keywords(TERMS_URL))
 print(highlighted_report)
