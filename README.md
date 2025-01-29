@@ -1,45 +1,21 @@
 [![REUSE status](https://api.reuse.software/badge/github.com/kyma-project/qa-toolkit)](https://api.reuse.software/info/github.com/kyma-project/qa-toolkit)
 
-> **NOTE:** This is a general template that you can use for a project README.md. Except for the mandatory sections, use only those sections that suit your use case but keep the proposed section order.
->
-> Mandatory sections: 
-> - `Overview`
-> - `Prerequisites`, if there are any requirements regarding hard- or software
-> - `Installation`
-> - `Contributing` - do not change this!
-> - `Code of Conduct` - do not change this!
-> - `Licensing` - do not change this!
-
-# {Project Title}
-<!--- mandatory --->
-> Modify the title and insert the name of your project. Use Heading 1 (H1).
+# QA Toolkit
 
 ## Overview
-<!--- mandatory section --->
 
-> Provide a description of the project's functionality.
->
-> If it is an example README.md, describe what the example illustrates.
-
-## Prerequisites
-
-> List the requirements to run the project or example.
-
-## Installation
-
-> Explain the steps to install your project. If there are multiple installation options, mention the recommended one and include others in a separate document. Create an ordered list for each installation task.
->
-> If it is an example README.md, describe how to build, run locally, and deploy the example. Format the example as code blocks and specify the language, highlighting where possible. Explain how you can validate that the example ran successfully. For example, define the expected output or commands to run which check a successful deployment.
->
-> Add subsections (H3) for better readability.
+This repository contains multiple scripts that are used across different GitHub Actions in order to improve overall quality of the delivered solutions, this include:
+- Tests coverage by commit
+- Quality gate utils for unit tests
+- Tools for highlightning the Acceptance Criteria in the BDD report
 
 ## Usage
 
-> Explain how to use the project. You can create multiple subsections (H3). Include the instructions or provide links to the related documentation.
-
-## Development
-
-> Add instructions on how to develop the project or example. It must be clear what to do and, for example, how to trigger the tests so that other contributors know how to make their pull requests acceptable. Include the instructions or provide links to related documentation.
+Any of the scripts may be imported and used in GH Actions.
+Examples include:
+- [KLM Acceptance Report](https://github.com/kyma-project/lifecycle-manager/blob/main/.github/workflows/report-acceptance-criteria.yml)
+- [Package Metrics](https://github.com/kyma-project/lifecycle-manager/blob/main/.github/workflows/report-package-metrics.yml)
+- [Unit Tests coverage verification in KLM](https://github.com/kyma-project/lifecycle-manager/blob/main/.github/workflows/verify-unit-test-coverage.yml)
 
 ## Contributing
 <!--- mandatory section - do not change this! --->
